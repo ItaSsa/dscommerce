@@ -1,5 +1,7 @@
 package com.devsuperior.dscommerce.entities;
 
+import java.util.Objects;
+
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 
@@ -35,6 +37,23 @@ public class OrderItemPK {
 
 	public void setProduct(Product product) {
 		this.product = product;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(order, product);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!(obj instanceof OrderItemPK)) {
+			return false;
+		}
+		OrderItemPK other = (OrderItemPK) obj;
+		return Objects.equals(order, other.order) && Objects.equals(product, other.product);
 	}
 	
 	
