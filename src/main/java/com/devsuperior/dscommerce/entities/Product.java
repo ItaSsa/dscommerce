@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
+import com.devsuperior.dscommerce.dtos.ProductDto;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -34,7 +36,7 @@ public class Product {
 	@JoinTable(name = "tb_product_category",
 	joinColumns = @JoinColumn(name = "product_id"),
 	inverseJoinColumns = @JoinColumn(name = "category_id"))
-	//To indicate we don't have repetion of the pair of product_id,category_id we must use Set
+	//To indicate we don't have repetition of the pair of product_id,category_id we must use Set
 	private Set<Category> categories =  new HashSet<>();
 	
 	@OneToMany(mappedBy = "id.product")
@@ -52,6 +54,14 @@ public class Product {
 		this.price = price;
 		this.imgUrl = imgUrl;
 	}
+	
+	public Product( ProductDto dto) {
+		this.name = dto.getName();
+		this.description = dto.getDescription();
+		this.price = dto.getPrice();
+		this.imgUrl = dto.getImgUrl();
+	}
+
 
 	public Long getId() {
 		return id;
