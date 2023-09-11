@@ -55,12 +55,6 @@ public class Product {
 		this.imgUrl = imgUrl;
 	}
 	
-	public Product( ProductDto dto) {
-		this.name = dto.getName();
-		this.description = dto.getDescription();
-		this.price = dto.getPrice();
-		this.imgUrl = dto.getImgUrl();
-	}
 
 
 	public Long getId() {
