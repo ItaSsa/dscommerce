@@ -6,10 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.devsuperior.dscommerce.config.SecurityConfig;
 import com.devsuperior.dscommerce.dtos.UserDTO;
 import com.devsuperior.dscommerce.entities.Role;
 import com.devsuperior.dscommerce.entities.User;
@@ -23,10 +24,9 @@ import jakarta.persistence.EntityNotFoundException;
 public class UserService implements UserDetailsService{
 
 	@Autowired
-	UserRepository userRepository;
+	private UserRepository userRepository;
 	
-	@Autowired
-	private SecurityConfig securityConfig;
+
 	
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -50,15 +50,24 @@ public class UserService implements UserDetailsService{
 	@Transactional
 	public UserDTO updatePassword(Long id) {
 		try {
+			
 			User entity = userRepository.getReferenceById(id);
-			entity.setPassword(securityConfig.getPasswordEncoder().encode(entity.getPassword()));
+			System.out.println("Antes: "+entity.getPassword());
+			entity.setPassword(pEnc().encode(entity.getPassword()));
 			entity = userRepository.save(entity);
+			System.out.println("Depois: "+ entity.getPassword());
 			return new UserDTO(entity);
 		}catch(EntityNotFoundException e) {
 			throw new ResourceNotFoundException(" User not found ");
 		}
-		
+	
 	}
+	
+	private PasswordEncoder pEnc() {
+		return new BCryptPasswordEncoder();
+	}
+
+
 
 	
 }
