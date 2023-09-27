@@ -46,7 +46,10 @@ public class User implements UserDetails{
 	    			inverseJoinColumns = @JoinColumn(name="role_id"))
 	    private Set<Role> roles = new HashSet<>();
 		
-		
+	    public User() {
+	    	
+	    }
+	    
 		public User(Long id, String name, String email, String phone, LocalDate birthDate, String password,
 				String roles) {
 			this.id = id;
@@ -161,6 +164,19 @@ public class User implements UserDetails{
 		public boolean isEnabled() {
 			return true;
 		}
+		
+	    public void addRole(Role role) {
+	    	roles.add(role);
+	    }
+	    
+	    public boolean hasRole(String roleName) {
+	    	for(Role r: roles) {
+	    		if(r.getAuthority().equals(roleName)) {
+	    			return true;
+	    		}
+	    	}
+	    	return false;
+	    }
 
 
 

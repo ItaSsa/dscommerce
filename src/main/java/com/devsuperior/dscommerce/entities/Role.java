@@ -63,4 +63,6 @@ public class Role implements GrantedAuthority{
 		Role other = (Role) obj;
 		return Objects.equals(authority, other.authority);
 	}	
+	
+	
 }
