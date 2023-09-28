@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.devsuperior.dscommerce.dtos.ProductDto;
+import com.devsuperior.dscommerce.dtos.ProductMinDTO;
 import com.devsuperior.dscommerce.entities.Product;
 import com.devsuperior.dscommerce.repositories.ProductRepository;
 import com.devsuperior.dscommerce.services.exceptions.DatabaseException;
@@ -35,9 +36,9 @@ public class ProductService {
 	
 	
 	@Transactional(readOnly = true)
-	public Page<ProductDto> searchByName(String name, Pageable pageable) {
+	public Page<ProductMinDTO> searchByName(String name, Pageable pageable) {
 		Page<Product> result = productRepository.searchByName(name,pageable);
-		return result.map(x -> new ProductDto(x));
+		return result.map(x -> new ProductMinDTO(x));
 	}
 
 	@Transactional
