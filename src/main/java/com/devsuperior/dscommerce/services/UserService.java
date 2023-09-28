@@ -3,11 +3,12 @@ package com.devsuperior.dscommerce.services;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,9 +17,6 @@ import com.devsuperior.dscommerce.entities.Role;
 import com.devsuperior.dscommerce.entities.User;
 import com.devsuperior.dscommerce.projections.UserDetailsProjection;
 import com.devsuperior.dscommerce.repositories.UserRepository;
-import com.devsuperior.dscommerce.services.exceptions.ResourceNotFoundException;
-
-import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class UserService implements UserDetailsService{
@@ -49,25 +47,45 @@ public class UserService implements UserDetailsService{
 	
 	@Transactional
 	public UserDTO updatePassword(Long id) {
-		try {
+		/*try {
 			
 			User entity = userRepository.getReferenceById(id);
-			System.out.println("Antes: "+entity.getPassword());
+
 			entity.setPassword(pEnc().encode(entity.getPassword()));
 			entity = userRepository.save(entity);
 			System.out.println("Depois: "+ entity.getPassword());
 			return new UserDTO(entity);
 		}catch(EntityNotFoundException e) {
 			throw new ResourceNotFoundException(" User not found ");
-		}
+		}*/
+		return null;
 	
 	}
 	
-	private PasswordEncoder pEnc() {
+	/*private PasswordEncoder pEnc() {
 		return new BCryptPasswordEncoder();
+	}*/
+
+	
+	protected User authenticated() {
+		
+		try{
+			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+			Jwt jwtPrincipal = (Jwt) authentication.getPrincipal();
+			String username = jwtPrincipal.getClaim("username");
+			
+			return userRepository.findByEmail(username).get();
+		}catch(Exception e) {
+			throw new UsernameNotFoundException(" User not found ");
+		}
+
 	}
 
-
+	@Transactional(readOnly = true)
+	public UserDTO getMe() {
+		User user = authenticated();
+		return new UserDTO(user);
+	}
 
 	
 }
