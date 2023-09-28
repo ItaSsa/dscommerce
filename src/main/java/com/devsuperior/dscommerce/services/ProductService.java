@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.devsuperior.dscommerce.dtos.CategoryDTO;
-import com.devsuperior.dscommerce.dtos.ProductDto;
+import com.devsuperior.dscommerce.dtos.ProductDTO;
 import com.devsuperior.dscommerce.dtos.ProductMinDTO;
 import com.devsuperior.dscommerce.entities.Category;
 import com.devsuperior.dscommerce.entities.Product;
@@ -29,10 +29,10 @@ public class ProductService {
 	
 	//To avoid databases lock
 	@Transactional(readOnly = true)
-	public ProductDto findById(Long id) {
+	public ProductDTO findById(Long id) {
 		Optional<Product> result = productRepository.findById(id);
 		Product product = result.orElseThrow(() -> new ResourceNotFoundException("Id not found"));
-		ProductDto dto = new ProductDto(product);
+		ProductDTO dto = new ProductDTO(product);
 		return dto;
 	}
 	
@@ -44,22 +44,22 @@ public class ProductService {
 	}
 
 	@Transactional
-	public ProductDto insert(ProductDto dto) {
+	public ProductDTO insert(ProductDTO dto) {
 			Product entity = new Product();
 			copyDtoToEntity(dto, entity);
 			productRepository.save(entity);
-			return new ProductDto(entity);
+			return new ProductDTO(entity);
 
 	}
 	
 	
 	@Transactional
-	public ProductDto update(Long id, ProductDto dto) {
+	public ProductDTO update(Long id, ProductDTO dto) {
 		try {
 			Product entity = productRepository.getReferenceById(id);
 			copyDtoToEntity(dto, entity);
 			entity = productRepository.save(entity);
-			return new ProductDto(entity);
+			return new ProductDTO(entity);
 		}catch(EntityNotFoundException e) {
 			throw new ResourceNotFoundException(" Product not found ");
 		}
@@ -79,7 +79,7 @@ public class ProductService {
 		}
 	}
 	
-	private void copyDtoToEntity(ProductDto dto, Product entity) {
+	private void copyDtoToEntity(ProductDTO dto, Product entity) {
 			entity.setName(dto.getName()) ;
 			entity.setDescription(dto.getDescription()) ;
 			entity.setPrice(dto.getPrice());

@@ -11,7 +11,7 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 
-public class ProductDto {
+public class ProductDTO {
 
 	private Long id;
 	@Size(min=3, max=80, message="The name must have between 3 and 80 characters")
@@ -27,7 +27,7 @@ public class ProductDto {
 	@NotEmpty
 	private List<CategoryDTO> categories =  new ArrayList<>();
 
-	public ProductDto(Long id, String name, String description, Double price, String imgUrl) {
+	public ProductDTO(Long id, String name, String description, Double price, String imgUrl) {
 		this.id = id;
 		this.name = name;
 		this.description = description;
@@ -35,7 +35,7 @@ public class ProductDto {
 		this.imgUrl = imgUrl;
 	}
 
-	public ProductDto(Product entity) {
+	public ProductDTO(Product entity) {
 		id = entity.getId();
 		name = entity.getName();
 		description = entity.getDescription();

@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
-import com.devsuperior.dscommerce.dtos.ProductDto;
+import com.devsuperior.dscommerce.dtos.ProductDTO;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
