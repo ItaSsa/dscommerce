@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.HttpClientErrorException.Forbidden;
 
 import com.devsuperior.dscommerce.dtos.CategoryDTO;
 import com.devsuperior.dscommerce.dtos.ProductDTO;
@@ -17,6 +18,7 @@ import com.devsuperior.dscommerce.entities.Category;
 import com.devsuperior.dscommerce.entities.Product;
 import com.devsuperior.dscommerce.repositories.ProductRepository;
 import com.devsuperior.dscommerce.services.exceptions.DatabaseException;
+import com.devsuperior.dscommerce.services.exceptions.ForbidenException;
 import com.devsuperior.dscommerce.services.exceptions.ResourceNotFoundException;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -45,10 +47,12 @@ public class ProductService {
 
 	@Transactional
 	public ProductDTO insert(ProductDTO dto) {
+	
 			Product entity = new Product();
 			copyDtoToEntity(dto, entity);
 			productRepository.save(entity);
 			return new ProductDTO(entity);
+
 
 	}
 	
@@ -63,6 +67,7 @@ public class ProductService {
 		}catch(EntityNotFoundException e) {
 			throw new ResourceNotFoundException(" Product not found ");
 		}
+
 	}
 	
 	
@@ -75,8 +80,9 @@ public class ProductService {
 		try {
 			productRepository.deleteById(id);    		
 		}catch(DataIntegrityViolationException e ) {
-			throw new DatabaseException("Referential integrity constraint violation ");
+			throw new DatabaseException("Referential integrity constraint violation - There are orders referencing this product");
 		}
+
 	}
 	
 	private void copyDtoToEntity(ProductDTO dto, Product entity) {
