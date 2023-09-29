@@ -36,11 +36,15 @@ public class OrderService {
 	@Autowired
 	private UserService userService;
 	
+	@Autowired
+	private AuthService authService;
+	
 	//To avoid databases lock
 	@Transactional(readOnly = true)
 	public OrderDTO findById(Long id) {
 		Optional<Order> result = repository.findById(id);
 		Order order = result.orElseThrow(() -> new ResourceNotFoundException("Id not found"));
+		authService.validateSelfOrAdmin(order.getClient().getId());
 		OrderDTO dto = new OrderDTO(order);
 		return dto;
 	}
